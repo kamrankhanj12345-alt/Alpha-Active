@@ -1,0 +1,245 @@
+:root{
+  --void:#04030A; --void-2:#0A0816; --bone:#F2EFFF; --dim:#8B86A8; --dimmer:#7D78A0;
+  --violet:#8B5CF6; --lime:#CCFF00; --pink:#FF2D78; --cyan:#22E6FF;
+  --display:"Chakra Petch",sans-serif; --body:"Space Grotesk",sans-serif;
+  --gut:clamp(18px,4vw,64px);
+  --nav-h:68px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--void)}
+body{
+  background:var(--void);color:var(--bone);font-family:var(--body);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  scrollbar-width:none; /* Firefox */
+  -ms-overflow-style:none; /* IE / Edge legacy */
+}
+body::-webkit-scrollbar{display:none}
+.skip-link{position:absolute;left:16px;top:-60px;z-index:200;padding:12px 16px;
+  background:var(--lime);color:var(--void);font-family:var(--display);font-size:11px;
+  letter-spacing:.16em;text-transform:uppercase;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+.skip-link:focus{top:14px}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--lime);color:var(--void)}
+
+/* Lenis needs these while smooth scroll is active. */
+html.lenis,html.lenis body{height:auto}
+html.lenis{overflow:hidden}
+html.lenis body{overflow:hidden}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+html,body{scrollbar-width:none;-ms-overflow-style:none}
+html::-webkit-scrollbar,body::-webkit-scrollbar,.lenis::-webkit-scrollbar{display:none}
+
+/* ── WebGL stage ───────────────────────────────────────────────── */
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+
+#grain,#scanlines{position:fixed;inset:0;pointer-events:none;z-index:3}
+#scanlines{opacity:.30;mix-blend-mode:multiply;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.32) 0 1px,transparent 1px 3px)}
+#grain{opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain .6s steps(4) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-2%,1%)}50%{transform:translate(1%,-2%)}75%{transform:translate(2%,2%)}}
+
+/* ── Boot ──────────────────────────────────────────────────────── */
+#boot{position:fixed;inset:0;z-index:100;background:var(--void);display:grid;place-items:center}
+#boot.done{opacity:0;visibility:hidden;transition:opacity .7s ease,visibility .7s}
+.boot-inner{width:min(340px,74vw);text-align:center}
+.boot-mark{width:46px;height:46px;margin:0 auto 26px;display:grid;place-items:center;
+  font-family:var(--display);font-weight:700;font-size:20px;color:var(--void);
+  background:linear-gradient(135deg,var(--violet),var(--pink));
+  clip-path:polygon(11px 0,100% 0,100% calc(100% - 11px),calc(100% - 11px) 100%,0 100%,0 11px);
+  animation:spin 3.4s cubic-bezier(.6,0,.4,1) infinite}
+@keyframes spin{0%,100%{transform:rotate(0)}50%{transform:rotate(180deg)}}
+.boot-label,.boot-note{font-family:var(--display);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
+.boot-bar{height:2px;background:rgba(255,255,255,.1);margin:16px 0 14px;overflow:hidden}
+.boot-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--lime))}
+.boot-pct{font-family:var(--display);font-size:44px;font-weight:700;line-height:1;margin-bottom:16px}
+.boot-note{color:var(--dimmer);font-size:9px}
+
+/* The `hidden` ATTRIBUTE only works via the UA rule [hidden]{display:none},
+   which any author `display` declaration overrides. Without the explicit rule
+   below this panel renders permanently on top of the whole site. */
+#nofallback{position:fixed;inset:0;z-index:120;display:grid;place-items:center;text-align:center;padding:40px;background:var(--void)}
+#nofallback[hidden]{display:none}
+#nofallback .diag{margin-top:26px;font-family:var(--display);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dimmer);line-height:2;max-width:60ch}
+#nofallback .diag b{color:var(--lime)}
+#nofallback h2{font-family:var(--display);text-transform:uppercase;margin-bottom:12px}
+#nofallback p{color:var(--dim);max-width:44ch}
+
+/* ── Chrome ────────────────────────────────────────────────────── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
+  gap:20px;height:var(--nav-h);padding:16px var(--gut);border-bottom:1px solid rgba(255,255,255,.09);
+  background:rgba(4,3,10,.42);backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;letter-spacing:.02em;font-size:15px}
+.brand i{width:24px;height:24px;display:grid;place-items:center;font-style:normal;font-size:12px;color:var(--void);
+  background:linear-gradient(135deg,var(--violet),var(--pink));
+  clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.brand:hover i{transform:rotate(-90deg)}
+.brand span{color:var(--lime)}
+.links{display:none;gap:30px}
+@media(min-width:900px){.links{display:flex}}
+.links a{font-family:var(--display);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);position:relative;transition:color .2s}
+.links a:hover{color:var(--bone)}
+.links a::after{content:"";position:absolute;left:0;right:100%;bottom:-6px;height:1px;background:var(--lime);transition:right .35s cubic-bezier(.2,.8,.2,1)}
+.links a:hover::after{right:0}
+.cta{font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  padding:11px 18px;color:var(--void);background:var(--lime);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  transition:box-shadow .25s}
+.cta:hover{box-shadow:0 0 30px rgba(204,255,0,.45)}
+
+#progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:30;pointer-events:none}
+#progress span{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:0 50%;
+  background:linear-gradient(90deg,var(--violet),var(--lime),var(--pink))}
+
+/* ── Acts ──────────────────────────────────────────────────────── */
+/* #scroller is the only thing with height — it drives the flight. The acts
+   are fixed overlays that hand off to each other as the camera travels, so
+   the page reads as one continuous move rather than stacked sections. */
+#scroller{height:700svh;pointer-events:none}
+main{position:fixed;inset:0;z-index:10;pointer-events:none}
+.act{position:absolute;inset:0;display:flex;align-items:flex-start;overflow:visible;
+  padding:calc(var(--nav-h) + 84px) var(--gut) 140px;will-change:opacity,transform}
+.act .copy{pointer-events:auto;max-width:100%;padding-bottom:24px}
+.copy{max-width:60ch;position:relative}
+.copy.center{margin:0 auto;text-align:center}
+
+.kick{font-family:var(--display);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--lime);margin-bottom:24px}
+
+h1{font-family:var(--display);font-weight:700;text-transform:uppercase;line-height:.88;letter-spacing:-.02em;
+  font-size:clamp(2.6rem,8.4vw,7.5rem)}
+h1 .l{display:block;overflow:hidden}
+h2{font-family:var(--display);font-weight:700;text-transform:uppercase;line-height:.92;letter-spacing:-.02em;
+  font-size:clamp(2rem,5.6vw,4.6rem)}
+h2.big{font-size:clamp(2.6rem,9vw,8rem);line-height:.88}
+.stroke{color:transparent;-webkit-text-stroke:2px var(--bone);paint-order:stroke fill}
+.lime{color:var(--lime)}
+
+p{margin-top:26px;max-width:54ch;line-height:1.75;color:#C6C1DE;font-size:clamp(15px,1.35vw,17px)}
+.copy.center p{margin-left:auto;margin-right:auto}
+
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.btns.center{justify-content:center}
+.btn{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  padding:16px 28px;color:var(--void);background:var(--lime);
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  transition:box-shadow .25s,transform .25s}
+.btn:hover{box-shadow:0 0 34px rgba(204,255,0,.45);transform:translate(2px,-2px)}
+.btn.ghost{background:transparent;color:var(--bone);box-shadow:inset 0 0 0 1px rgba(255,255,255,.26)}
+.btn.ghost:hover{color:var(--lime);box-shadow:inset 0 0 0 1px var(--lime),0 0 26px rgba(204,255,0,.2)}
+
+.slate{list-style:none;margin-top:44px;border-top:1px solid rgba(255,255,255,.12)}
+.slate li{display:grid;grid-template-columns:3rem 1fr auto;gap:18px;align-items:baseline;
+  padding:22px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+.slate b{font-family:var(--display);font-size:11px;letter-spacing:.16em;color:var(--violet)}
+.slate span{font-family:var(--display);font-size:clamp(1.1rem,2.4vw,1.7rem);font-weight:700;text-transform:uppercase}
+.slate em{font-family:var(--display);font-style:normal;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dimmer)}
+
+.craft{list-style:none;display:flex;flex-wrap:wrap;gap:10px;margin-top:40px}
+.craft li{font-family:var(--display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+  border:1px solid rgba(255,255,255,.14);padding:11px 16px;transition:color .25s,border-color .25s;
+  clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.craft li:hover{color:var(--lime);border-color:rgba(204,255,0,.45)}
+
+.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;margin-top:44px;background:rgba(255,255,255,.12)}
+@media(min-width:760px){.facts{grid-template-columns:repeat(4,1fr)}}
+.facts>div{background:var(--void);padding:22px 18px}
+.facts dt{font-family:var(--display);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dimmer)}
+.facts dd{font-family:var(--display);font-size:15px;font-weight:700;text-transform:uppercase;margin-top:10px}
+
+.scroll-cue{position:absolute;bottom:-70px;left:0;font-family:var(--display);font-size:10px;
+  letter-spacing:.26em;text-transform:uppercase;color:var(--dimmer);animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{50%{opacity:.3;transform:translateY(5px)}}
+
+footer{margin-top:56px;font-family:var(--display);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dimmer)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+
+
+/* ── No-WebGL degradation ──────────────────────────────────────────
+   The scene is garnish; the copy is the page. With 3D off we hide the
+   canvas and put a slow CSS gradient behind the content instead, so the
+   site stays usable rather than becoming a dead end. */
+.no-webgl #stage{display:none}
+.no-webgl body,html.no-webgl{background:var(--void)}
+.no-webgl main::before{
+  content:"";position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(60vw 60vw at 18% 20%, rgba(139,92,246,.30), transparent 62%),
+    radial-gradient(50vw 50vw at 82% 30%, rgba(255,45,120,.22), transparent 62%),
+    radial-gradient(46vw 46vw at 50% 88%, rgba(34,230,255,.16), transparent 62%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(0,-4%,0) scale(1.1)}}
+
+
+/* ── Readability scrim ─────────────────────────────────────────────
+   The 3D background has bright frames (lime gates, bloom). A soft dark halo
+   behind each copy block keeps text legible without boxing it in. */
+.copy::before{content:"";position:absolute;inset:-56px -64px;z-index:-1;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(4,3,10,.66),rgba(4,3,10,.38) 55%,rgba(4,3,10,0))}
+
+/* ── Keyboard focus ────────────────────────────────────────────────
+   clip-path also clips outlines, so the cut-corner buttons draw their focus
+   ring inside the box instead. */
+a:focus-visible{outline:2px solid var(--lime);outline-offset:4px}
+.skip-link:focus-visible,.brand:focus-visible,.links a:focus-visible,.cta:focus-visible,.btn:focus-visible{outline:none}
+.btn:focus-visible,.cta:focus-visible{outline:none;
+  box-shadow:inset 0 0 0 3px var(--void),inset 0 0 0 5px var(--bone)}
+.btn.ghost:focus-visible{box-shadow:inset 0 0 0 2px var(--lime)}
+
+/* ── Phones ────────────────────────────────────────────────────────
+   Tighter vertical rhythm so the tallest acts (slate, studio) fit a 640px
+   screen, and the slate rows stack instead of squeezing three columns. */
+@media (max-width:700px){
+  .act{padding:96px var(--gut) 72px}
+  .kick{margin-bottom:16px}
+  p{margin-top:18px}
+  .btns{margin-top:26px;flex-direction:column;align-items:stretch;width:100%}
+  .btns.center{justify-content:flex-start}
+  .btn{display:flex;align-items:center;justify-content:center;width:100%;text-align:center}
+  .stroke{-webkit-text-stroke:1.5px var(--bone)}
+  .slate{margin-top:26px}
+  .slate li{grid-template-columns:2.2rem 1fr;gap:4px 14px;padding:14px 0}
+  .slate em{grid-column:2}
+  .craft{margin-top:26px;gap:8px}
+  .craft li{padding:9px 12px;font-size:10px}
+  .facts{margin-top:28px}
+  .facts>div{padding:16px 14px}
+  footer{margin-top:32px}
+  .scroll-cue{bottom:-52px}
+}
+@media (max-height:620px){
+  .act{padding-top:calc(var(--nav-h) + 34px);padding-bottom:70px}
+  .kick{margin-bottom:8px}
+  p{margin-top:12px;line-height:1.5}
+  .copy{transform:translateY(-8px)}
+  .btns{margin-top:18px}
+  .slate{margin-top:20px}
+  .slate li{padding:10px 0}
+  .craft{margin-top:18px;gap:8px}
+  .facts{margin-top:20px}
+  .facts>div{padding:14px 12px}
+  footer{margin-top:18px}
+  .scroll-cue{display:none}
+  .copy::before{inset:-24px -24px;}
+}
+@media (max-width:420px){
+  #nav{padding:12px var(--gut);gap:12px}
+  .cta{padding:10px 12px;letter-spacing:.12em}
+  .btn{padding:14px 20px}
+}
+/* Phones held sideways: very little height to work with. */
+@media (max-height:520px) and (orientation:landscape){
+  .act{padding:68px var(--gut) 28px}
+  h1{font-size:clamp(2rem,10vh,4rem)}
+  h2,h2.big{font-size:clamp(1.6rem,8vh,2.8rem)}
+  p{margin-top:12px;font-size:14px;line-height:1.55}
+  .kick{margin-bottom:10px}
+  .btns,.slate,.craft,.facts{margin-top:16px}
+  footer{margin-top:18px}
+  .scroll-cue{display:none}
+}
